@@ -1,7 +1,7 @@
 # Render Blueprint - https://render.com/docs/blueprint-spec
 #
-# Dimensions is a single static page: public/index.html (WebGL + Web Audio,
-# no framework, no server, no build). Render just publishes the public/ folder.
+# Dimensions is a static, phone-installable web app in public/ (WebGL + Web Audio,
+# manifest + service worker; no framework, server or build). Render publishes public/.
 #
 # Deploy: in Render choose New > Blueprint and point it at this repository.
 
