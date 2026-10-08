@@ -1,0 +1,54 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+#
+# Dimensions is a single static page: public/index.html (WebGL + Web Audio,
+# no framework, no server, no build). Render just publishes the public/ folder.
+#
+# Deploy: in Render choose New > Blueprint and point it at this repository.
+
+
+
+services:
+  - type: web
+    name: meditation-statev1
+    runtime: static
+
+    # No `plan` key: static sites have no compute plan, and the validator
+    # rejects one.
+
+    # Nothing to compile or download. Render still runs a build step, so keep
+    # it a no-op instead of the old npm install + 110 MB asset download.
+    buildCommand: echo "No build step - publishing public/"
+    staticPublishPath: ./public
+
+    buildFilter:
+      paths:
+        - public/**
+        - render.yaml
+
+    headers:
+      # One file, not fingerprinted: always revalidate so a deploy reaches
+      # everyone immediately.
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+
+      # The page loads only its own inline code, the Syne font from Google
+      # Fonts, and audio from files the visitor picks (blob: URLs).
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; media-src 'self' blob:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+
+      # "Use microphone" needs the mic; nothing else does.
+      - path: /*
+        name: Permissions-Policy
+        value: "microphone=(self), camera=(), geolocation=()"
+
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+
+    # Single page, no client-side routes: nothing to rewrite.
+    routes: []
