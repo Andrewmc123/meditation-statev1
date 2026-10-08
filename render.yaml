@@ -5,8 +5,6 @@
 #
 # Deploy: in Render choose New > Blueprint and point it at this repository.
 
-
-
 services:
   - type: web
     name: meditation-statev1
@@ -15,8 +13,8 @@ services:
     # No `plan` key: static sites have no compute plan, and the validator
     # rejects one.
 
-    # Nothing to compile or download. Render still runs a build step, so keep
-    # it a no-op instead of the old npm install + 110 MB asset download.
+    # Nothing to compile or download. Render still runs a build step, so it
+    # is a no-op.
     buildCommand: echo "No build step - publishing public/"
     staticPublishPath: ./public
 
