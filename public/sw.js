@@ -1,7 +1,8 @@
 // Dimensions service worker: makes the app installable and lets it open offline.
 // Network first, so a new deploy shows up straight away; the cache is the fallback.
-const CACHE = "dimensions-v1";
-const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
+const CACHE = "dimensions-v2";
+const SHELL = ["./", "css/app.css", "js/main.js", "js/listen.js", "js/scene.js", "js/view.js",
+  "js/hibernation.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png",
   "icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {

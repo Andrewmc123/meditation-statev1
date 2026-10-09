@@ -1,7 +1,9 @@
 # Render Blueprint - https://render.com/docs/blueprint-spec
 #
-# Dimensions is a static, phone-installable web app in public/ (WebGL + Web Audio,
-# manifest + service worker; no framework, server or build). Render publishes public/.
+# Dimensions is a static, phone-installable web app in public/ (WebGL + Web Audio +
+# motion sensors, manifest + service worker; no framework, server or build).
+# Render publishes public/. Everything runs on the visitor's phone, so the free
+# static plan is all it needs.
 #
 # Deploy: in Render choose New > Blueprint and point it at this repository.
 
@@ -30,16 +32,17 @@ services:
         name: Cache-Control
         value: no-cache
 
-      # The page loads only its own inline code, the Syne font from Google
-      # Fonts, and audio from files the visitor picks (blob: URLs).
+      # The app loads only its own scripts, styles and service worker, the Syne
+      # font from Google Fonts, and audio from files the visitor picks (blob: URLs).
       - path: /*
         name: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; media-src 'self' blob:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+        value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; media-src 'self' blob:; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
 
-      # "Use microphone" needs the mic; nothing else does.
+      # Microphone (music and the Hibernation room), motion sensors (look around,
+      # vibration) and keeping the screen awake. Nothing else.
       - path: /*
         name: Permissions-Policy
-        value: "microphone=(self), camera=(), geolocation=()"
+        value: "microphone=(self), accelerometer=(self), gyroscope=(self), magnetometer=(self), screen-wake-lock=(self), camera=(), geolocation=()"
 
       - path: /*
         name: X-Content-Type-Options
